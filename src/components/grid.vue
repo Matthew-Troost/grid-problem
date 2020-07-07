@@ -1,5 +1,6 @@
 <template>
   <div>
+    <vue-slider v-model="gridWidth" />
     <button @click="suffleGrid">Shuffle Grid</button>
     <div v-for="(row, row_index) in grid" :key="row.id">
       <div
@@ -19,19 +20,23 @@
 </template>
 
 <script>
+import VueSlider from "vue-slider-component";
+import "vue-slider-component/theme/antd.css";
+
 export default {
+  components: {
+    VueSlider,
+  },
   data() {
     return {
-      grid: [
-        [0, 0, 0, 0, 1],
-        [1, 1, 0, 0, 0],
-        [1, 0, 1, 1, 1],
-        [0, 0, 0, 0, 0],
-        [1, 1, 1, 1, 0],
-      ],
+      grid: [],
+      gridWidth: 5,
       selectedBlock: [],
       connections: [],
     };
+  },
+  created() {
+    this.suffleGrid();
   },
   methods: {
     getConnections(row_index, col_index) {
@@ -92,9 +97,9 @@ export default {
     suffleGrid() {
       this.selectedBlock = [];
       this.grid = [];
-      for (let row = 0; row < 5; row++) {
+      for (let row = 0; row < this.gridWidth; row++) {
         this.grid.push([]);
-        for (let col = 0; col < 5; col++) {
+        for (let col = 0; col < this.gridWidth; col++) {
           this.grid[row][col] = Math.round(Math.random());
         }
       }
