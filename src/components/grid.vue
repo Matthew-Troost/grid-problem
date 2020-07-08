@@ -1,15 +1,10 @@
 <template>
   <div>
-    <vue-slider v-model="gridWidth" />
-    <verte v-model="blockColor" model="hex"></verte>
-    <verte v-model="blockHoverColor" model="hex"></verte>
-
-    <button @click="suffleGrid">Shuffle Grid</button>
     <div v-for="(row, row_index) in grid" :key="row.id">
       <div
         v-for="(col, col_index) in row"
         :key="col.id"
-        :style="selectedColors"
+        :style="[selectedColors, blockHeight]"
         :class="[
           {
             'block--colored': col == 1,
@@ -34,25 +29,27 @@
 </template>
 
 <script>
-import VueSlider from "vue-slider-component";
-import "vue-slider-component/theme/antd.css";
-import Verte from "verte";
-import "verte/dist/verte.css";
-
 export default {
-  components: {
-    VueSlider,
-    Verte,
+  props: {
+    gridWidth: {
+      type: Number,
+      default: 10,
+    },
+    blockColor: {
+      type: String,
+      default: "#7f6ffd",
+    },
+    blockHoverColor: {
+      type: String,
+      default: "#ffffff",
+    },
   },
   data() {
     return {
       grid: [],
-      gridWidth: 5,
       selectedBlock: [],
       connections: [],
       hovering: false,
-      blockColor: "#7f6ffd",
-      blockHoverColor: "#ffffff",
     };
   },
   computed: {
@@ -62,9 +59,15 @@ export default {
         "--color-hover": this.blockHoverColor,
       };
     },
+    blockHeight: function() {
+      return {
+        height: `calc(100vw / ${this.gridWidth * 2} )`,
+        width: `calc(100vw / ${this.gridWidth * 2})`,
+      };
+    },
   },
   created() {
-    this.suffleGrid();
+    this.shuffle();
   },
   methods: {
     getConnections(row_index, col_index) {
@@ -136,7 +139,7 @@ export default {
       this.hovering = false;
       this.selectedBlock = [row_index, col_index];
     },
-    suffleGrid() {
+    shuffle() {
       this.selectedBlock = [];
       this.grid = [];
       for (let row = 0; row < this.gridWidth; row++) {
@@ -152,14 +155,14 @@ export default {
 <style>
 .block {
   display: inline-block;
-  width: 100px;
-  height: 100px;
   border: 1px solid grey;
   cursor: pointer;
   position: relative;
   border-radius: 10px;
   margin: 0px 4px;
   transition: all 0.3s;
+  max-width: 100px;
+  max-height: 100px;
 }
 .block--colored {
   background-color: var(--color);
@@ -177,5 +180,8 @@ export default {
   left: 50%;
   width: 50%;
   margin: -10% 0 0 -20%;
+}
+.color-picker {
+  display: inline-block;
 }
 </style>
