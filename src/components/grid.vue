@@ -15,11 +15,12 @@
         ]"
         @click="onBlockClick(row_index, col_index)"
         @mouseover="onBlockHover(row_index, col_index)"
+        @mouseleave="hovering = false"
       >
         <div class="center-vertical">
           {{
             selectedBlock[0] == row_index && selectedBlock[1] == col_index
-              ? connections.length
+              ? connectionCount
               : ""
           }}
         </div>
@@ -49,6 +50,7 @@ export default {
       grid: [],
       selectedBlock: [],
       connections: [],
+      connectionCount: 0,
       hovering: false,
     };
   },
@@ -68,6 +70,11 @@ export default {
   },
   created() {
     this.shuffle();
+  },
+  watch: {
+    gridWidth: function() {
+      this.shuffle();
+    },
   },
   methods: {
     getConnections(row_index, col_index) {
@@ -130,14 +137,13 @@ export default {
       this.hovering = true;
 
       this.getConnections(row_index, col_index);
-
-      setTimeout(() => {
-        this.hovering = false;
-      }, 2000);
     },
     onBlockClick(row_index, col_index) {
+      if (this.grid[row_index][col_index] == 0) return;
+
       this.hovering = false;
       this.selectedBlock = [row_index, col_index];
+      this.connectionCount = this.connections.length;
     },
     shuffle() {
       this.selectedBlock = [];
@@ -163,6 +169,7 @@ export default {
   transition: all 0.3s;
   max-width: 100px;
   max-height: 100px;
+  color: #242453;
 }
 .block--colored {
   background-color: var(--color);
@@ -180,8 +187,5 @@ export default {
   left: 50%;
   width: 50%;
   margin: -10% 0 0 -20%;
-}
-.color-picker {
-  display: inline-block;
 }
 </style>

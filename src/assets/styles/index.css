@@ -3,16 +3,26 @@ body {
   color: white;
 }
 
-.column {
-  float: left;
-  width: 50%;
-  padding: 10px;
-  height: 300px; /* Should be removed. Only for demonstration */
+.verte__guide {
+  cursor: pointer;
 }
 
-/* Clear floats after the columns */
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
+button {
+  padding: 10px 20px;
+  border-radius: 15px;
+  border: 1px solid white;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 1em;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+button:focus {
+  outline: none;
+}
+
+button:hover {
+  background: lightgray;
+  border-color: lightgray;
 }

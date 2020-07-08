@@ -57,4 +57,8 @@ export default {
   text-align: center;
   margin: 60px;
 }
+.color-picker {
+  display: inline-block;
+  margin: 1em;
+}
 </style>
