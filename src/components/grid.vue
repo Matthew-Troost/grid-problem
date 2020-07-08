@@ -1,13 +1,25 @@
 <template>
   <div>
     <vue-slider v-model="gridWidth" />
+    <verte v-model="blockColor" model="hex"></verte>
+    <verte v-model="blockHoverColor" model="hex"></verte>
+
     <button @click="suffleGrid">Shuffle Grid</button>
     <div v-for="(row, row_index) in grid" :key="row.id">
       <div
         v-for="(col, col_index) in row"
         :key="col.id"
-        :class="[{ 'block--red': col == 1 }, 'block']"
-        @click="col == 1 ? getConnections(row_index, col_index) : null"
+        :style="selectedColors"
+        :class="[
+          {
+            'block--colored': col == 1,
+            'block--revealConnections':
+              hovering && col == 1 && alreadyTraversed([row_index, col_index]),
+          },
+          'block',
+        ]"
+        @click="onBlockClick(row_index, col_index)"
+        @mouseover="onBlockHover(row_index, col_index)"
       >
         {{
           selectedBlock[0] == row_index && selectedBlock[1] == col_index
@@ -22,10 +34,13 @@
 <script>
 import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/antd.css";
+import Verte from "verte";
+import "verte/dist/verte.css";
 
 export default {
   components: {
     VueSlider,
+    Verte,
   },
   data() {
     return {
@@ -33,15 +48,24 @@ export default {
       gridWidth: 5,
       selectedBlock: [],
       connections: [],
+      hovering: false,
+      blockColor: "red",
+      blockHoverColor: "green",
     };
+  },
+  computed: {
+    selectedColors: function() {
+      return {
+        "--color": this.blockColor,
+        "--color-hover": this.blockHoverColor,
+      };
+    },
   },
   created() {
     this.suffleGrid();
   },
   methods: {
     getConnections(row_index, col_index) {
-      this.selectedBlock = [row_index, col_index];
-      this.connections = [this.selectedBlock];
       this.recursiveTraverse(row_index, col_index);
     },
     recursiveTraverse(row_index, col_index) {
@@ -94,6 +118,22 @@ export default {
         return JSON.stringify(ele) === JSON.stringify(block);
       });
     },
+    onBlockHover(row_index, col_index) {
+      if (this.grid[row_index][col_index] == 0) return;
+
+      this.connections = [[row_index, col_index]];
+      this.hovering = true;
+
+      this.getConnections(row_index, col_index);
+
+      setTimeout(() => {
+        this.hovering = false;
+      }, 2000);
+    },
+    onBlockClick(row_index, col_index) {
+      this.hovering = false;
+      this.selectedBlock = [row_index, col_index];
+    },
     suffleGrid() {
       this.selectedBlock = [];
       this.grid = [];
@@ -115,7 +155,11 @@ export default {
   border: 1px solid grey;
   cursor: pointer;
 }
-.block--red {
-  background-color: red;
+.block--colored {
+  background-color: var(--color);
+}
+
+.block--revealConnections {
+  background-color: var(--color-hover);
 }
 </style>
