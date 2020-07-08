@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <h1>Grid Problem</h1>
-    <vue-slider v-model="gridWidth" :min="2" :max="25" />
+    <vue-slider v-model="gridWidth" :min="2" :max="25" :width="400" class="_slider" />
     <div>
       <div class="color-picker">
         <verte v-model="blockColor" model="hex"></verte><span>Block Color</span>
@@ -55,10 +55,14 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  margin: 60px;
+  margin: 3em;
 }
 .color-picker {
   display: inline-block;
   margin: 1em;
 }
+._slider{
+  margin: auto;
+}
+
 </style>
