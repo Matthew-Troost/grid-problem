@@ -21,11 +21,13 @@
         @click="onBlockClick(row_index, col_index)"
         @mouseover="onBlockHover(row_index, col_index)"
       >
-        {{
-          selectedBlock[0] == row_index && selectedBlock[1] == col_index
-            ? connections.length
-            : ""
-        }}
+        <div class="center-vertical">
+          {{
+            selectedBlock[0] == row_index && selectedBlock[1] == col_index
+              ? connections.length
+              : ""
+          }}
+        </div>
       </div>
     </div>
   </div>
@@ -49,8 +51,8 @@ export default {
       selectedBlock: [],
       connections: [],
       hovering: false,
-      blockColor: "red",
-      blockHoverColor: "green",
+      blockColor: "#7f6ffd",
+      blockHoverColor: "#ffffff",
     };
   },
   computed: {
@@ -154,12 +156,26 @@ export default {
   height: 100px;
   border: 1px solid grey;
   cursor: pointer;
+  position: relative;
+  border-radius: 10px;
+  margin: 0px 4px;
+  transition: all 0.3s;
 }
 .block--colored {
   background-color: var(--color);
+  border-color: var(--color);
 }
 
 .block--revealConnections {
   background-color: var(--color-hover);
+  border-color: var(--color-hover);
+}
+.center-vertical {
+  top: 50%;
+  height: 100;
+  position: absolute;
+  left: 50%;
+  width: 50%;
+  margin: -10% 0 0 -20%;
 }
 </style>
